@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+imoort subprocess 
 
 PORT_NUMBER = 8080
 SERVER_NAME=''
@@ -21,7 +22,8 @@ class myHandler(BaseHTTPRequestHandler):
     #expects a id
     
     #give command to run the program
-    
+    #make sure you got the wirte input range, #security
+    subprocess.call(["./install_program.sh",""], shell=True)
     
     # are the ouptut files written to db? 
     

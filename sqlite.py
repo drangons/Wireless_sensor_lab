@@ -13,7 +13,7 @@ c=conn.cursor()
 #create table
 
 c.execute('''CREATE TABLE programs
-             (Id integer, program text, version real, comment test)''')
+             (Id integer, program text, version real, comment text)''')
 
 programs=Sqltuple()
 

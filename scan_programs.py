@@ -38,8 +38,10 @@ def Sqltuple():
     if f.endswith("INFO"):
       #read a json structure and form the tuple 
       #print f
+      # take the file dir and the JSON data as a tuple
       content=open(f)
-      json_data.append(json.load(content))
+      j=json.load(content) # dir(j) is a dict ?
+      print j['program name'],j['version'],j['comment'],f[-5:]
       content.close()
       
 
