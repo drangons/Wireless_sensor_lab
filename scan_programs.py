@@ -14,7 +14,7 @@ from pprint import pprint
 #Root path where the programs are stored 
 path="../SENSOR_LAB_ASSINGMENTS"
 
-def Sqltuple():
+def Sqltuple(jsonobj):
 #scan for all files
   files=[]
   for dirname, dirnames, filenames in os.walk(path):
@@ -33,7 +33,9 @@ def Sqltuple():
     #   dirnames.remove('.git')
 
   #look for the file with name INFO each directory
-  json_data=[] 
+  i=0
+  
+  sqltuple=[]
   for f in files:
     if f.endswith("INFO"):
       #read a json structure and form the tuple 
@@ -41,21 +43,20 @@ def Sqltuple():
       # take the file dir and the JSON data as a tuple
       content=open(f)
       j=json.load(content) # dir(j) is a dict ?
-      print j['program name'],j['version'],j['comment'],f[-5:]
+      sqltuple.append((i,j['program name'],j['version'],j['comment'],f[:-5]))
+      i=i+1
       content.close()
       
-
+  if jsonobj : 
+    print j
+    return j
 
   #Form a list and return it SQl for insertion.
-  t=()
-  sqltuple=[]
-  i=0
-  for data in json_data:
-    #print data['version']
-    t = i,data['program name'] , data['version'] , data['comment']
-    print t
-    i=i+1
-    sqltuple.append(t)
+
+  
+  
+  for data in sqltuple:
+    print data
   
   return sqltuple  
 

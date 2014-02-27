@@ -13,11 +13,11 @@ c=conn.cursor()
 #create table
 
 c.execute('''CREATE TABLE programs
-             (Id integer, program text, version real, comment text)''')
+             (id integer, program text, version real, comment text,path text)''')
 
-programs=Sqltuple()
+programs=Sqltuple(0)
 
-c.executemany('INSERT INTO programs VALUES (?,?,?,?)', programs)             
+c.executemany('INSERT INTO programs VALUES (?,?,?,?,?)', programs)             
 # Save (commit) the changes
 conn.commit()
 

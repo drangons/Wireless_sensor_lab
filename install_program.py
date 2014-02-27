@@ -8,6 +8,7 @@ conn=sqlite3.connect("programs.db")
 
 c=conn.cursor()
 
+id=1
 c.execute("Select * from progrmas where id=?", id)
 
 r=c.fetchone()
