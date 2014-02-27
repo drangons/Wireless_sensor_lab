@@ -3,13 +3,15 @@
 # connect to the sqlite db
 
 import sqlite3
+import os
+import subprocess
 
 conn=sqlite3.connect("programs.db")
 
 c=conn.cursor()
 
 id=1
-c.execute("Select * from progrmas where id=?", id)
+c.execute("Select * from progrmas where id=?", (id,))
 
 r=c.fetchone()
 # get the program path 
@@ -20,28 +22,41 @@ program_name=r['program']
 #Go to the directory
 
 os.chdir(path) # possible exception.
-
+# os.getcwd() # get current working directory
 
 f = open('compile_log', 'w')
 
-# install the program on base station volume
-result=subprocess.call(['tos-deluge',' serial@/dev/ttyUSB1:57600', '-i <volume>',' build/iris/tos_image.xml'],stdout=f, stderr=subprocess.STDOUT, shell=True) #allout.txt 2>&1 # use the subprocess module here
+# reset the base station 
+result=subprocess.call('tos-deluge serial@/dev/ttyUSB1:57600 -b',shell=True)
 
 if result !=0:
-  pass
+  print "reset the base station?"
+  
+#build the application
+result=subprocess.call('make iris',stdout=f, stderr=subprocess.STDOUT, shell=True)
+
+# install the program on base station volume
+result=subprocess.call('tos-deluge serial@/dev/ttyUSB1:57600 -i <volume> build/iris/tos_image.xml',stdout=f, stderr=subprocess.STDOUT, shell=True) #allout.txt 2>&1 # use the subprocess module here
+
+if result !=0:
+  print "Error in installing the program to base station"
+  #pass
 
 
 # dessimate the program in volume 2
 
-result=subprocess.call(['tos-deluge',' serial@/dev/ttyUSB1:57600',' -d 2 '] ,stdout=f, stderr=subprocess.STDOUT, shell=True )
+result=subprocess.call('tos-deluge serial@/dev/ttyUSB1:57600 -d 2 ',stdout=f, stderr=subprocess.STDOUT, shell=True)
+
+#update the json database here.
 
 if result !=0:
-  pass
+  print "Error in dessimating the program"
+  
 #instruct the remote mote to install the program in volume 2
-result=subprocess.call(['tos-deluge',' serial@/dev/ttyUSB1:57600',' -dr 2 '], stdout=f, stderr=subprocess.STDOUT, shell=True) 
+result=subprocess.call('tos-deluge serial@/dev/ttyUSB1:57600 -dr 2 ', stdout=f, stderr=subprocess.STDOUT, shell=True) 
 
 if result !=0:
-  pass
+  print "Error in reprogramming"
 #create a new table in the db and insert the text file ??
 c.execute('''CREATE TABLE compile_log
              (Id integer,data blob)''')
